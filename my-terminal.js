@@ -7,7 +7,7 @@ greetings_sub = '<white>Welcome to my Terminal Portfolio</white>\n';
 
 const font = 'Slant';
 
-figlet.defaults({ fontPath: 'https://unpkg.com/figlet/fonts/' });
+figlet.defaults({ fontPath: 'fonts/' });
 figlet.preloadFonts([font], ready);
 
 const formatter = new Intl.ListFormat('en', {
