@@ -1,0 +1,23 @@
+[
+  {
+    "role": "Software Engineering Intern",
+    "company": "Tech Solutions Ltd.",
+    "duration": "June 2024 - August 2024",
+    "location": "Kolkata, India",
+    "details": [
+      "G.",
+      "Implemented authentication and authorization modules.",
+      "Collaborated with frontend team to integrate APIs."
+    ]
+  },
+  {
+    "role": "Open Source Contributor",
+    "company": "GitHub Projects",
+    "duration": "2023 - Present",
+    "location": "Remote",
+    "details": [
+      "Contributed bug fixes and features to open source JavaScript libraries.",
+      "Reviewed pull requests and participated in community discussions."
+    ]
+  }
+]

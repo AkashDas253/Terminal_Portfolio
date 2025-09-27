@@ -20,10 +20,11 @@ let commands = {};
 let helpText = '';
 
 async function loadData() {
-    const [educationData, projectsData, skillsData] = await Promise.all([
+    const [educationData, projectsData, skillsData, experienceData] = await Promise.all([
         fetch('data/education.json').then(r => r.json()),
         fetch('data/projects.json').then(r => r.json()),
-        fetch('data/skills.json').then(r => r.json())
+        fetch('data/skills.json').then(r => r.json()),
+        fetch('data/experience.json').then(r => r.json())
     ]);
 
     const skills = [
@@ -41,6 +42,16 @@ async function loadData() {
         ...educationData.map(edu => [
             `* <h2>${edu.institution}</h2> \n<yellow>"${edu.degree}"</yellow> ${edu.year}`,
             ...edu.details.map(detail => `  * ${detail}`)
+        ]).flat(),
+        ''
+    ];
+
+    const experience = [
+        '',
+        '<white>Experience</white>',
+        ...experienceData.map(exp => [
+            `* <h2>${exp.company}</h2> <yellow>"${exp.role}"</yellow> (${exp.duration}, ${exp.location})`,
+            ...exp.details.map(detail => `  * ${detail}`)
         ]).flat(),
         ''
     ];
@@ -68,19 +79,25 @@ async function loadData() {
         ''
     ];
 
-    directories = { skills, education, projects };
+    directories = { skills, education, experience, projects };
     dirs = Object.keys(directories);
+    // Save for format commands
+    window._educationData = educationData;
+    window._experienceData = experienceData;
+    window._projectsData = projectsData;
+    window._skillsData = skillsData;
 }
 
 async function loadCommands() {
-    const [help, ls, joke, cd, credits, echo, record] = await Promise.all([
+    const [help, ls, joke, cd, credits, echo, record, experience] = await Promise.all([
         import('./commands/help.js').then(m => m.default),
         import('./commands/ls.js').then(m => m.default),
         import('./commands/joke.js').then(m => m.default),
         import('./commands/cd.js').then(m => m.default),
         import('./commands/credits.js').then(m => m.default),
         import('./commands/echo.js').then(m => m.default),
-        import('./commands/record.js').then(m => m.default)
+        import('./commands/record.js').then(m => m.default),
+        import('./commands/experience.js').then(m => m.default)
     ]);
 
     commands = {
@@ -90,7 +107,28 @@ async function loadCommands() {
         cd: function(dir = null) { cd(term, cwdObj, dirs, root, dir); },
         credits: function() { credits(term); },
         echo: function(...args) { echo(term, ...args); },
-        record: function(arg) { record(term, arg); }
+        record: function(arg) { record(term, arg); },
+        experience: function() { experience(term); },
+        education_format: function() {
+            const sample = (window._educationData && window._educationData[0]) || {};
+            term.echo('<white>Education Entry Format:</white>');
+            term.echo(JSON.stringify(sample, null, 2));
+        },
+        experience_format: function() {
+            const sample = (window._experienceData && window._experienceData[0]) || {};
+            term.echo('<white>Experience Entry Format:</white>');
+            term.echo(JSON.stringify(sample, null, 2));
+        },
+        project_format: function() {
+            const sample = (window._projectsData && window._projectsData[0]) || {};
+            term.echo('<white>Project Entry Format:</white>');
+            term.echo(JSON.stringify(sample, null, 2));
+        },
+        skill_format: function() {
+            const sample = (window._skillsData && window._skillsData[0]) || {};
+            term.echo('<white>Skill Entry Format:</white>');
+            term.echo(JSON.stringify(sample, null, 2));
+        }
     };
 }
 
